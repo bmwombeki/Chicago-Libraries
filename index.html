@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Libraries list</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <style>
+       #map {
+        height: 100%;
+        
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      } 
+    </style>
+
+  </head>
+  <body>
+
+
+<ul class="mdc-list demo-list">
+<li class="mdc-list-item mdc-ripple-upgraded template"  tabindex="0" id="172d9968-ee7e-45fe-a2cb-623f04e93d68" style="--mdc-ripple-fg-size:360px; --mdc-ripple-fg-scale:1.69977; --mdc-ripple-fg-translate-start:-67.309px, -157.847px; --mdc-ripple-fg-translate-end:120px, -156.007px;">
+
+<span class="mdc-list-item__meta material-icons" aria-hidden="true"></span>
+    
+
+  </li>
+          </ul>
+      
+  <div id="map"></div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+     
+      
+  <script type="text/javascript">
+  window.mdc.autoInit();
+
+
+  function initMap() {
+        var chicago = {lat: 41.8781, lng: -87.6298};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 11,
+          center: chicago
+        });
+       
+    $(document).ready(function(){
+      $.get("https://data.cityofchicago.org/resource/psqp-6rmg.json", function(response) {
+        console.log(response);
+   
+        $.each(response, function(i,v) {
+            console.log(i,v);
+            
+            var cell = $("<li>");
+            cell.addClass("mdc-list-item mdc-ripple-upgraded");
+          
+          var btn = '<button id=btn' + i + ' data-mdc-auto-init="MDCIconButtonToggle" id="add-to-favorites" class="mdc-icon-button" aria-label="Add to favorites" aria-hidden="true"aria-pressed="false"><i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">star_rate</i><i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--off"> stars</i></button>';
+
+            
+            cell.html(btn + v.name_  + "<br>" + v.address + "<br>");
+
+            $("body").append(cell);
+            $("#btn"+i).click(function(e) {
+                console.log(v);
+                if ($(this).find("i.mdc-icon-button__icon--on").css("display") == "none") {
+                  console.log("it's off");
+                  $(this).find("i.mdc-icon-button__icon--on").css("display", "block");
+                  $(this).find("i.mdc-icon-button__icon--off").css("display", "none");
+                } else {
+                  console.log("it's on");
+                    $(this).find("i.mdc-icon-button__icon--on").css("display", "none");
+                    $(this).find("i.mdc-icon-button__icon--off").css("display", "block");
+                }
+                
+            });
+          
+              var marker = new google.maps.Marker({
+                            position: {lat: parseFloat(v.latitude), lng: parseFloat(v.longitude)},
+                            map: map,
+                            title: 'Chicago'
+                          });
+              
+                  var infowindow = new google.maps.InfoWindow({
+                    content: "<h1>" + v.name_ + "</h1>"
+                  });
+
+                  marker.addListener('click', function() {
+                    infowindow.open(map, marker);
+                  });
+           
+        });
+
+      });
+    });
+  }
+  </script>
+
+       <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChXSPWl8oIusVZY3RI0WZofihIwbI_E54&callback=initMap">
+    </script>
+  
+  </body>
+</html>
