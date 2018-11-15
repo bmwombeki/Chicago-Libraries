@@ -82,7 +82,7 @@
             });
           
               var marker = new google.maps.Marker({
-                            position: {lat: parseFloat(v.latitude), lng: parseFloat(v.longitude)},
+                            position: {lat: parseFloat(v.location.coordinates[1]), lng: parseFloat(v.location.coordinates[0])},
                             map: map,
                             title: 'Chicago'
                           });
